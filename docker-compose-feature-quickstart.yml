@@ -4,7 +4,7 @@ webapp:
     service: webapp
   image: quay.io/autodesk_bionano/gctorfeature_webapp${BNR_ENV_TAG}
   ports:
-     - "3333:3333"
+    - "3333:3333"
   environment:
     PORT: 3333
     HOST_URL: https://gctor-feature${BNR_ENV_URL_SUFFIX}.bionano.autodesk.com
