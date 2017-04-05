@@ -25,3 +25,4 @@ build-manifest.txt
 coverage
 docs/jsdoc/genetic-constructor
 storage-app.md5
+compose-tmp/

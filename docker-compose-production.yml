@@ -7,4 +7,3 @@ webapp:
     HOST_URL: https://geneticconstructor.bionano.autodesk.com
     REG_ALERT_EMAIL: ${REG_ALERT_EMAIL}
     REG_ALERT_SUBJECT: "Genetic Constructor Registration"
-  restart: always

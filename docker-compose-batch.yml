@@ -1,9 +1,10 @@
-webapp:
+batch:
   extends:
     file: docker-compose-aws.yml
     service: webapp
   image: quay.io/autodesk_bionano/gctor_webapp${BNR_ENV_TAG}
+#  image: geneticconstructor_webapp:latest # local build
   environment:
-    PORT: 3000
-  ports:
-    - "3000:3000"
+    DEBUG: constructor:data:*
+  command:
+    ./bin/migrate/infinite-loop.sh

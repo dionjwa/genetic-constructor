@@ -25,11 +25,13 @@ Easiest way to get set up, using mocked authentication. In this installation, th
 ### In a Docker Container
 
 ```
-docker-compose -f docker-compose.yml -p gctor build
-docker-compose -f docker-compose.yml -p gctor up
+docker-compose -f docker-compose-local.yml -p gctor build
+docker-compose -f docker-compose-local.yml -p gctor up
 ```
 
 Builds a docker image in an virual machine, dependencies handled for you, with an ephemeral file system.
+
+More information on available `docker-compose` configuration files can be found [here](./docker-compose.md).
 
 ## With Authentication
 
