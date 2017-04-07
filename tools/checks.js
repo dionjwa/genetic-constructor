@@ -39,30 +39,51 @@ export const checkNodeVersion = () => {
 //not necessary, but v3 greatly preferred
 export const checkNpmVersion = () => {};
 
+// check for biopython version 1.68.... WARN
+// tests will fail, due to a string parsing change in 1.69
+export const checkBioPython = () =>
+  promisedExec('pip show biopython', {}, { comment: 'Checking Biopython version...' })
+  .catch((err) => {
+    console.error(colors.red('\npython and pip are required to run Constructor\n'));
+    throw err;
+  })
+  .then(results => {
+    try {
+      const [/*regMatch*/, version] = results.match(/Version: (.*?)\n/);
+      if (parseFloat(version) >= 1.69) {
+        console.log(`Found version ${version}`);
+      } else {
+        console.warn(colors.yellow('BioPython 1.69+ is required for tests'));
+      }
+    } catch (err) {
+      console.warn(colors.yellow('Error checking BioPython version. Please ensure you have version 1.69+'));
+    }
+  });
+
 export const checkDockerInstalled = () => promisedExec('docker -v', {}, { comment: 'Checking if Docker installed...' })
-    .catch((err) => {
-      console.error(colors.red('\nDocker CLI is required to run Constructor\n'));
-      throw err;
-    })
-    .then((result) => {
-      const version = findVersions(result, { loose: true });
-      console.log(`Found version ${version}`);
+.catch((err) => {
+  console.error(colors.red('\nDocker CLI is required to run Constructor\n'));
+  throw err;
+})
+.then((result) => {
+  const version = findVersions(result, { loose: true });
+  console.log(`Found version ${version}`);
 
-      const [/*match*/, major, minor] = /(\d+?)\.(\d+?)\.(.+)$/.exec(version);
-      // we ignore the 'Z' version of Docker but keep in mind it may not always be an integer
+  const [/*match*/, major, minor] = /(\d+?)\.(\d+?)\.(.+)$/.exec(version);
+  // we ignore the 'Z' version of Docker but keep in mind it may not always be an integer
 
-      let versionOk = false;
-      if (parseInt(major, 10) >= 17 && parseInt(minor, 10) >= 3) { // new, free version
-        versionOk = true;
-      } else if (parseInt(major, 10) === 1 && parseInt(minor, 10) >= 12) { // old version
-        versionOk = true;
-      }
+  let versionOk = false;
+  if (parseInt(major, 10) >= 17 && parseInt(minor, 10) >= 3) { // new, free version
+    versionOk = true;
+  } else if (parseInt(major, 10) === 1 && parseInt(minor, 10) >= 12) { // old version
+    versionOk = true;
+  }
 
-      if (!versionOk) {
-        console.error(colors.red('Docker version > 17.03 is required'));
-        throw Error('Docker > 17.03 required');
-      }
-    });
+  if (!versionOk) {
+    console.error(colors.red('Docker version > 17.03 is required'));
+    throw Error('Docker > 17.03 required');
+  }
+});
 
 async function checks() {
   try {
@@ -70,6 +91,7 @@ async function checks() {
     if (!NO_DOCKER) {
       await checkDockerInstalled();
     }
+    await checkBioPython();
     await checkPortFree();
   } catch (err) {
     console.log('error running checks for Constructor: ', err);
