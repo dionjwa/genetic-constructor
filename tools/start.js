@@ -76,7 +76,7 @@ async function start() {
       const clientCompiler = webpack(clientConfigs);
       const clientDevMiddleware = webpackDevMiddleware(clientCompiler, {
         publicPath: clientConfig.output.publicPath,
-        stats: clientConfig.stats.colors,
+        stats: clientConfig.stats,
       });
       const hotMiddleware = webpackHotMiddleware(clientCompiler);
 

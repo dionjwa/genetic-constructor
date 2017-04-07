@@ -26,7 +26,7 @@ function Header({ signedIn }) {
   const rightContent = (
     <a
       className="Header-link"
-      href="/homepage/signin"
+      href={signedIn ? '/' : '/homepage/signin'}
     >
       Sign In
     </a>
@@ -41,15 +41,15 @@ function Header({ signedIn }) {
         />
         <a
           className="Header-link"
-          href="/#interfaceSection"
+          href="/?forceLanding=true#interfaceSection"
         >Features</a>
         <a
           className="Header-link"
-          href="/#trySectionTop"
+          href="/?forceLanding=true#trySectionTop"
         >Pricing</a>
         <a
           className="Header-link"
-          href="/#teamSection"
+          href="/?forceLanding=true#teamSection"
         >Team</a>
         <a
           className="Header-link"
@@ -65,7 +65,7 @@ function Header({ signedIn }) {
         >Blog</a>
         <a
           className="Header-link active"
-          href="https://autodeskbionano.blogspot.com/search/label/Genetic%20Constructor"
+          href="/commons"
         >Commons</a>
       </div>
 

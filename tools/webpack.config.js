@@ -145,6 +145,7 @@ export const config = {
     chunkModules: VERBOSE,
     cached: VERBOSE,
     cachedAssets: VERBOSE,
+    children: VERBOSE,
   },
 
   postcss: function plugins(bundler) {
@@ -264,10 +265,6 @@ export const commonsConfig = merge({}, clientConfig, {
 
   output: {
     filename: 'commons.js',
-  },
-
-  stats: {
-    children: false,
   },
 });
 
