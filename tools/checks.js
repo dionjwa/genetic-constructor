@@ -47,7 +47,7 @@ export const checkBioPython = () =>
     console.error(colors.red('\npython and pip are required to run Constructor\n'));
     throw err;
   })
-  .then(results => {
+  .then((results) => {
     try {
       const [/*regMatch*/, version] = results.match(/Version: (.*?)\n/);
       if (parseFloat(version) >= 1.69) {
