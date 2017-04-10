@@ -20,6 +20,7 @@ import { Link, withRouter } from 'react-router';
 import _ from 'lodash';
 import moment from 'moment';
 
+import * as links from '../../../src/constants/links';
 import Rollup from '../../../src/models/Rollup';
 
 import { unsanitize } from '../../sanitize';
@@ -37,6 +38,7 @@ export function Project({ router, project, snapshot }) {
     return null;
   }
 
+  const commonsLicenseLink = links.SHARING_CREATIVE_COMMONS_CC0;
   const openLink = `/project/${project.project.id}`;
 
   //NB - if rendering multiple times, should only create Rollup if needed
@@ -96,8 +98,8 @@ export function Project({ router, project, snapshot }) {
         <h3>License</h3>
         <div className="Project-textblock">
           This project is made available license-free in the public domain under the&nbsp;
-          <a href="" target="_blank" rel="noopener noreferrer">Creative Commons CCØ</a> license.&nbsp;
-          <a href="" target="_blank" rel="noopener noreferrer">Learn more…</a>
+          <a href={commonsLicenseLink} target="_blank" rel="noopener noreferrer">Creative Commons CCØ</a> license.&nbsp;
+          <a href={commonsLicenseLink} target="_blank" rel="noopener noreferrer">Learn more…</a>
         </div>
       </aside>
 
