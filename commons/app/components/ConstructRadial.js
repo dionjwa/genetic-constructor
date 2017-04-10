@@ -35,7 +35,10 @@ export default class ConstructRadial extends Component {
     if (node.rules.list) {
       const firstOptionId = Object.keys(node.options)[0];
       const firstListOption = firstOptionId && project.blocks[firstOptionId];
-      size = firstListOption.sequence.length;
+
+      if (firstListOption) {
+        size = firstListOption.sequence.length;
+      }
     }
 
     return Object.assign(node, {
