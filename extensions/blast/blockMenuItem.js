@@ -28,6 +28,11 @@ constructor.extensions.register('blast', 'menu:block',
           jobId,
           components: [],
           sequence: {
+            md5: null,
+            length: null,
+            url: null,
+            initialBases: null,
+            trim: null,
             annotations: [],
           },
         });
