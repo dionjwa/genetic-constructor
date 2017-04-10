@@ -179,8 +179,11 @@ app.get('/version', (req, res) => {
 // PAGE LOADING
 
 app.get('*', (req, res) => {
-  //on root request (ignoring query params), if not logged in, show them the landing page
-  if ((req.path === '' || req.path === '/') && !req.user) {
+  // on root request if not logged in, show them the landing page
+  // or, if query param to force landing page
+  const loggedOutRootRequest = (req.path === '' || req.path === '/') && !req.user;
+  const forceLanding = req.query.forceLanding === 'true';
+  if (loggedOutRootRequest || forceLanding) {
     res.sendFile(`${pathPublic}/landing.html`);
     return;
   }

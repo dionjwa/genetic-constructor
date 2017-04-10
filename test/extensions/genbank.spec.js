@@ -22,12 +22,12 @@ describe('Extensions', () => {
           expect(output.project).not.to.equal(undefined);
           expect(ProjectSchema.validate(output.project)).to.equal(true);
           expect(output.project.metadata.name).to.equal('EU912544');
-          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence.');
+          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence');
           expect(output.project.components.length).to.equal(1);
           const parentBlock = getBlock(output.blocks, output.project.components[0]);
           expect(parentBlock.components.length).to.equal(4);
           expect(parentBlock.metadata.name).to.equal('EU912544');
-          expect(parentBlock.metadata.description).to.equal('Cloning vector pDM313, complete sequence.');
+          expect(parentBlock.metadata.description).to.equal('Cloning vector pDM313, complete sequence');
           expect(parentBlock.metadata.genbank.feature_annotations.mol_type).to.equal('other DNA');
           expect(parentBlock.metadata.start).to.equal(undefined);
           expect(parentBlock.metadata.end).to.equal(undefined);
@@ -117,7 +117,7 @@ describe('Extensions', () => {
           expect(output.project).not.to.equal(undefined);
           expect(ProjectSchema.validate(output.project)).to.equal(true);
           expect(output.project.metadata.name).to.equal('EU912543');
-          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence.')
+          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence')
           expect(output.project.components.length).to.equal(3);
           expect(getBlock(output.blocks, output.project.components[0]).metadata.name).to.equal('EU912541');
           expect(getBlock(output.blocks, output.project.components[1]).metadata.name).to.equal('EU912542');
@@ -142,7 +142,7 @@ describe('Extensions', () => {
           expect(output.project).not.to.equal(undefined);
           expect(ProjectSchema.validate(output.project)).to.equal(true);
           expect(output.project.metadata.name).to.equal('EU912544');
-          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence.');
+          expect(output.project.metadata.description).to.equal('Cloning vector pDM313, complete sequence');
 
           //usually middleware writes the sequences, so we need to do this ourselves
           return Promise.all(

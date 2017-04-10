@@ -20,6 +20,10 @@ if (process.env.BROWSER) {
 }
 
 export default function Tag({ text, description }) {
+  if (!text) {
+    return null;
+  }
+
   return (
     <div
       className="Tag"
