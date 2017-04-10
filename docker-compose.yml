@@ -1,9 +1,16 @@
 webapp:
-  extends:
-    file: docker-compose-common.yml
-    service: webapp
   build: .
+  environment:
+    NO_DOCKER: "true"
+    NODE_ENV: ${NODE_ENV}
+    AWS_ACCESS_KEY_ID: ${GC_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${GC_AWS_SECRET_ACCESS_KEY}
+    GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
+    CAPTCHA_SECRET_REGISTER: ${CAPTCHA_SECRET_REGISTER}
+    DEBUG: ${DEBUG}
+    VERBOSE_REQUEST_LOGS: ${VERBOSE_REQUEST_LOGS}
+    EMAIL: ${EMAIL}
+    SEND_GRID_LIST_ID: ${SEND_GRID_LIST_ID}
   command:
     npm run start-instance
-  environment:
-    PORT: 3000
+  log_driver: json-file

@@ -1,6 +1,6 @@
 test:
   extends:
-    file: docker-compose-common.yml
+    file: docker-compose.yml
     service: webapp
   build: .
   links:
@@ -9,26 +9,22 @@ test:
   command:
     npm run test-jenkins
   environment:
-    NO_DOCKER: "true"
     PGHOST: db
     REDIS_HOST: redis
     REDIS_PORT: 6379
     REDIS_DB: 1
+    EMAIL: 0
+    VERBOSE_REQUEST_LOGS: 0
     TEST_OUTPUT_PATH: /tmp/jenkins
   volumes:
-    - $WORKSPACE:/tmp/jenkins
+    - ${WORKSPACE}:/tmp/jenkins
 
 db:
   extends:
-    file: ./storage-ext/docker-compose-common.yml
+    file: docker-compose-local.yml
     service: db
-  build: ./storage-ext/postgres/
 
 redis:
-  restart: always
-  image: redis:3.2.0-alpine
-  command: redis-server /usr/local/etc/redis/redis.conf
-  ports:
-    - "6379:6379"
-  volumes:
-    - ./redis.conf:/usr/local/etc/redis/redis.conf
+  extends:
+    file: docker-compose-local.yml
+    service: redis
