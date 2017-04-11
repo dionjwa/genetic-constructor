@@ -131,7 +131,7 @@ export class InventoryItem extends Component {
   }
 
   handleClick = () => {
-    const { item, onSelect, inventoryType, inspectorToggleVisibility, focusForceBlocks, focusRole } = this.props;
+    const { item, onSelect, inventoryType, inspectorToggleVisibility, focusForceBlocks } = this.props;
 
     this.setState({ skipFocus: false });
 
@@ -162,8 +162,6 @@ export class InventoryItem extends Component {
         //todo - this shouldnt be responsibility of this generic component. move into specific components.
         if (inventoryType === blockDragType) {
           focusForceBlocks([result]);
-        } else if (inventoryType === roleDragType) {
-          focusRole(result.id);
         }
         inspectorToggleVisibility(true);
       }
