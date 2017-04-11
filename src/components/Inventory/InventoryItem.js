@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 
 import { focusForceBlocks } from '../../actions/focus';
 import { inspectorToggleVisibility, uiSetGrunt, uiSpin } from '../../actions/ui';
-import { block as blockDragType, role as roleDragType } from '../../constants/DragTypes';
+import { block as blockDragType } from '../../constants/DragTypes';
 import DnD from '../../graphics/dnd/dnd';
 import MouseTrap from '../../graphics/mousetrap';
 import '../../styles/InventoryItem.css';
@@ -169,13 +169,13 @@ export class InventoryItem extends Component {
         this.setState({ loadError: false, loaded: result });
       }
     })
-      .catch((err) => {
-        console.log(err); //eslint-disable-line no-console
-        if (onSelect) {
-          this.setState({ loadError: true });
-        }
-      })
-      .then(() => this.setState({ loading: false, skipFocus: false }));
+    .catch((err) => {
+      console.log(err); //eslint-disable-line no-console
+      if (onSelect) {
+        this.setState({ loadError: true });
+      }
+    })
+    .then(() => this.setState({ loading: false, skipFocus: false }));
   };
 
   render() {
@@ -190,10 +190,10 @@ export class InventoryItem extends Component {
     return (
       <div
         className={`InventoryItem${
-      (!!image || !!svg) ? ' hasImage' : ''
-      }${(loading && !skipFocus) ? ' loading' : ''
-      }${(loadError) ? ' loadError' : ''
-      }${isSelected ? ' selected' : ''}`}
+          (!!image || !!svg) ? ' hasImage' : ''
+          }${(loading && !skipFocus) ? ' loading' : ''
+          }${(loadError) ? ' loadError' : ''
+          }${isSelected ? ' selected' : ''}`}
         ref={(el) => { this.itemElement = el; }}
         data-inventory={dataAttr}
       >
