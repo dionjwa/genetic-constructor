@@ -14,13 +14,17 @@
  limitations under the License.
  */
 
+export const FACEBOOK = 'https://www.facebook.com/autodesklifesciences/';
+export const TWITTER = 'https://twitter.com/adskLifeScience';
+export const YOUTUBE = 'https://www.youtube.com/channel/UC19GH6wqbQMnOe2fF4DZlZA';
+
 // these are the links e.g. used in "Learn More" links
 
 const readmeIO = 'https://geneticconstructor.readme.io/docs/';
 
 const readme = append => `${readmeIO}${append || ''}`;
 
-export const BASE = readmeIO;
+export const READMEIO = readmeIO;
 
 export const TERMS_OF_SERVICE = '/tos.html';
 export const PRIVACY_POLICY = 'http://www.autodesk.com/company/legal-notices-trademarks/privacy-statement';

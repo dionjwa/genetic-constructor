@@ -15,6 +15,8 @@
  */
 import React from 'react';
 
+import * as links from '../../../src/constants/links';
+
 if (process.env.BROWSER) {
   require('../styles/Footer.css'); //eslint-disable-line global-require
 }
@@ -69,17 +71,17 @@ export default function Footer() {
           <h4>Contact Us</h4>
 
           <a
-            href="https://www.facebook.com/autodeskbionano"
+            href={links.FACEBOOK}
             target="_blank"
             rel="noopener noreferrer"
           >Facebook</a>
           <a
-            href="https://twitter.com/adskBioNano"
+            href={links.TWITTER}
             target="_blank"
             rel="noopener noreferrer"
           >Twitter</a>
           <a
-            href="https://www.youtube.com/channel/UC19GH6wqbQMnOe2fF4DZlZA"
+            href={links.YOUTUBE}
             target="_blank"
             rel="noopener noreferrer"
           >YouTube</a>
