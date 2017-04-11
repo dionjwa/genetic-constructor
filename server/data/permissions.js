@@ -86,7 +86,7 @@ export const userOwnsProjectMiddleware = (req, res, next) => {
   logger(`[userOwnsProjectMiddleware]
   Checking project: ${projectId}
   User: ${user ? user.uuid : 'null'}
-  exists: ${projectDoesNotExist}
+  exists: ${!projectDoesNotExist}
   owner: ${projectOwner}`);
 
   if (!projectId) {
@@ -98,10 +98,7 @@ export const userOwnsProjectMiddleware = (req, res, next) => {
     return res.status(401).send('no user associated with request');
   }
 
-  //todo - instead of throwing, lets just run the query and assignment here
-  //todo - can we just look at req.params.projectId and do it that way? is that safe?
-
-  //if you hit this, you didnt set req params properly to use this function
+  //if you hit this, you didnt set req params properly to use this function and its your fault, not a bad request
   invariant(projectDoesNotExist || projectOwner, '[userOwnsProjectMiddleware] if req.projectId and req.user and project exists, req.projectOwner must be defined');
 
   if (!projectDoesNotExist && projectOwner !== user.uuid) {

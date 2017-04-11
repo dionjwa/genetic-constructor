@@ -55,6 +55,11 @@ export class ConstructViewerJob extends Component {
     }
   }
 
+  //e.g. page navigation instead of explicit deletion
+  componentWillUnmount() {
+    this.cancelPolling();
+  }
+
   onDelete = () => {
     const { onDelete, construct, projectId, projectRemoveConstruct } = this.props;
 
@@ -124,9 +129,15 @@ export class ConstructViewerJob extends Component {
         _.forEach(constructs, (block, constructId) => {
           this.props.blockAddComponent(construct.id, constructId);
         });
+      } else {
+        this.onFailure('Job result in wrong format');
       }
 
       this.props.blockSetJobId(construct.id, null);
+    })
+    .catch((err) => {
+      const message = err.message || 'The results of your job could not be retrieved.';
+      this.onFailure(message);
     });
   };
 

@@ -35,6 +35,8 @@ import Rollup from '../../src/models/Rollup';
 
  jobQueue is expected to write to the output, which is then downloaded and saved as the result for the parent (delegator) job
 
+ Task job IDs are just used internally, and all files etc. should be keyed by the delegator job ID
+
  -
 
  have a delegator job queue so:
@@ -52,36 +54,61 @@ import Rollup from '../../src/models/Rollup';
  - (comms) need to listen across all queues, since storing state on server
  - (memory) a promise is required for every job running, between initiate + resolution
  */
+
 //todo - need to durably set slave jobId -- when server restarts if job wasnt complete, the master-slave link is lost, and when a new job starts up, it starts a new slave. The first job never resolves. The client never knew about the second job.
 
+//'jobs' queue used to delegate to other queues (parent job queue)
 const delegatorManager = new JobQueueManager('jobs');
+
 const logger = debug('constructor:jobs:processor');
 
 // JOB TRACKING + RESOLUTION
 
-//map jobId to resolve function, resolve when the job completes
+//map jobId (DELEGATOR jobId, not task jobId) to resolve function (which is resolved when job completes)
 const jobResolutionMap = {};
 
-//when job at remote queue finishes, resolve / reject at jobResolutionMap
-//only calls the function if the job is in the map (e.g. more than one instance is up)
+/**
+ * Attempt to resolve the parent job
+ *
+ * when job at remote queue finishes, resolve / reject at jobResolutionMap
+ * only calls the function if the job is in the map (e.g. more than one instance is up => might be handled at another server)
+ *
+ * @private
+ * @param {UUID} jobId ID of parent job
+ * @param {*} result Result of the job... probably a project rollup
+ */
 const attemptResolveJob = (jobId, result) => {
   if (typeof jobResolutionMap[jobId] === 'function') {
+    logger(`delegator: ${jobId} - resolving job`);
     jobResolutionMap[jobId](result);
+
+    //remove reference to handler after we run it... the resolver will still have a reference to it, and allow garbage collect once done
+    setTimeout(() => { delete jobResolutionMap[jobId]; });
   }
 };
 
-//when the job from the specific queue, finishes do some processing
-//called by attemptResolveJob with (result)
-//NB - result may be an error / rejection
+/**
+ * Handler when the slave job completes.
+ * when the job from the specific queue finishes, do some processing, then call this function.
+ * called by attemptResolveJob with `result`
+ *
+ * Use jobId of parent job, so files are all keyed properly by the parent jobId (task job id is just used internally)
+ *
+ * @private
+ * @param {Job} job the parent job
+ * @param {Function} promiseResolver promise resolution function for parent job. can call with result, or error / rejection
+ *
+ * @param result final result (after processing) for the job
+ */
 const createSlaveJobCompleteHandler = (job, promiseResolver) => (result) => {
-  const jobId = job.jobId;
+  const { jobId } = job;
   const { projectId } = job.opts;
 
   // jobs are expected to write their output to the output file
   // we expect this to be a rollup
-  const getRawResultPromise = jobFiles.jobFileRead(projectId, jobId, FILE_NAME_OUTPUT)
+  const getOutputPromise = jobFiles.jobFileRead(projectId, jobId, FILE_NAME_OUTPUT)
   .catch(() => {
-    logger(`slave: ${job.jobId} - no output file found`);
+    logger(`slave-handler: ${jobId} - no output file found`);
     return null;
   })
   .then((output) => {
@@ -89,12 +116,13 @@ const createSlaveJobCompleteHandler = (job, promiseResolver) => (result) => {
       return null;
     }
 
-    logger(`slave: ${job.jobId} - got output`);
+    logger(`slave-handler: ${jobId} - got output`);
+    logger(output);
 
     try {
       return JSON.parse(output);
     } catch (err) {
-      logger(`slave: ${job.jobId} - error parsing output`);
+      logger(`slave-handler: ${jobId} - error parsing output`);
       logger(output);
       return null;
     }
@@ -106,7 +134,7 @@ const createSlaveJobCompleteHandler = (job, promiseResolver) => (result) => {
 
   //wait for file write and then return the processed result to the promise resolution
   return writeResultPromise
-  .then(() => getRawResultPromise)
+  .then(() => getOutputPromise)
   .then((result) => {
     const gotRollup = (result && typeof result.blocks === 'object');
     if (gotRollup) {
@@ -114,23 +142,27 @@ const createSlaveJobCompleteHandler = (job, promiseResolver) => (result) => {
         //if got an apparent rollup, validate that the rollup is valid
         Rollup.validate(result, true);
       } catch (err) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`slave: ${job.jobId} - error validating output rollup`);
-        }
+        logger(`slave-handler: ${jobId} - error validating output rollup`);
         throw err;
       }
 
       if (result.sequences) {
+        logger(`slave-handler: ${jobId} - writing sequences...`);
         return sequenceWriteManyChunksAndUpdateRollup(result);
       }
+    } else {
+      logger(`slave-handler: ${jobId} - got empty result`);
     }
     return result;
   })
-  .then(promiseResolver)
+  .then((result) => {
+    logger(`slave-handler: ${jobId} - resolving!`);
+    return promiseResolver(result);
+  })
   .catch((err) => {
-    console.log('slave: jobCompleteHandler error');
+    console.log('slave-handler: jobCompleteHandler error');
     console.log(err);
-    promiseResolver(Promise.reject(err));
+    return promiseResolver(Promise.reject(err));
   });
 };
 
@@ -150,26 +182,38 @@ const jobTypeToQueue = jobTypes.reduce((map, jobType) => {
   const manager = new JobQueueManager(jobType);
 
   manager.onAddJob((job) => {
-    logger(`slave: [${jobType}] ${job.jobId} - started`);
+    const { parentJobId } = job.opts;
+    logger(`slave: [${jobType}] ${parentJobId} (slave: ${job.jobId}) - started`);
   }, true);
 
-  //when the job completes at the appropriate queue, resolve here
+  // When the job completes at the appropriate queue, resolve here
   manager.onComplete((job, result) => {
-    logger(`slave: [${jobType}] ${job.jobId} - complete`);
-    logger(result);
-    attemptResolveJob(job.jobId, result);
+    const { parentJobId } = job.opts;
+
+    logger(`slave: [${jobType}] ${parentJobId} (slave: ${job.jobId}) - complete`);
+    // what is returned from the job is actually meaningless, but you might want to log it while developing
+    // the job should write to the output file link it is provided
+    //logger(result);
+
+    attemptResolveJob(parentJobId, result);
   }, true);
 
+  // Job that was considered stalled. Useful for debugging job workers that crash or pause the event loop.
   manager.queue.on('stalled', (job) => {
-    // Job that was considered stalled. Useful for debugging job workers that crash or pause the event loop.
-    logger(`slave: [${jobType}] ${job.jobId} - stalled`);
-    attemptResolveJob(job.jobId, Promise.reject(new Error('job stalled')));
+    const { parentJobId } = job.opts;
+
+    logger(`slave: [${jobType}] ${parentJobId} (slave: ${job.jobId}) - stalled`);
+
+    attemptResolveJob(parentJobId, Promise.reject(new Error('job stalled')));
   }, true);
 
-  //when the job fails, reject with error
+  // When the job fails, reject with error
   manager.onFail((job, err) => {
-    logger(`slave: [${jobType}] ${job.jobId} - failed`);
+    const { parentJobId } = job.opts;
+
+    logger(`slave: [${jobType}] ${parentJobId} (slave: ${job.jobId}) - failed`);
     logger(err);
+
     attemptResolveJob(job.jobId, Promise.reject(new Error(err)));
   }, true);
 
@@ -179,9 +223,8 @@ const jobTypeToQueue = jobTypes.reduce((map, jobType) => {
 
 // JOB HANDLING
 
-//'jobs' queue used to delegate to other queues
 delegatorManager.setProcessor((job) => {
-  const jobId = job.jobId;
+  const { jobId } = job;
   const { type, data } = job.data;
   const { projectId } = job.opts;
 
@@ -203,11 +246,12 @@ delegatorManager.setProcessor((job) => {
       const urlData = jobFiles.jobFileSignedUrl(projectId, jobId, FILE_NAME_DATA, 'putObject');
       const urlOutput = jobFiles.jobFileSignedUrl(projectId, jobId, FILE_NAME_OUTPUT, 'putObject');
 
-      //create specific jobId for the slave job
-      const taskJobId = JobQueueManager.createJobId();
-
       //add a resolution function, for when the job at slave is done
-      jobResolutionMap[taskJobId] = createSlaveJobCompleteHandler(job, resolve);
+      //this will be called by onComplete for the task job handler, which knows the `parentJobId` from options below
+      jobResolutionMap[jobId] = createSlaveJobCompleteHandler(job, resolve);
+
+      //create specific jobId for the slave job, just to help with logging
+      const taskJobId = JobQueueManager.createJobId();
 
       const jobOptions = {
         jobId: taskJobId,
@@ -217,6 +261,11 @@ delegatorManager.setProcessor((job) => {
         urlData,
         urlOutput,
       };
+
+      logger(`delegator: [${type}] creating child:
+delegator: ${jobId}
+slave: ${taskJobId}
+projectId: ${projectId}`);
 
       //delegate the job
       queueManager.createJob(data, jobOptions);

@@ -91,12 +91,13 @@ projectId: ${projectId}`);
     })
     .then((result) => {
       logger(`${jobId} parse json finished`);
-      //logger(result);
+      logger(result);
 
       //write the output file
       return writeFile(urlOutput, JSON.stringify(result, null, 2))
       .then(() => {
-        logger(`${jobId} output file written @ ${urlOutput}`);
+        logger(`${jobId} output file written @ ${urlOutput}
+COMPLETE ${jobId}`);
 
         //return a dummy result
         return true;

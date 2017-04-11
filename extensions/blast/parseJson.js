@@ -21,6 +21,7 @@ const Block = constructorClasses.models.Block;
 const Project = constructorClasses.models.Project;
 const Rollup = constructorClasses.models.Rollup;
 
+//for tests
 const dummyJob = () => ({
   jobId: null,
   opts: {
@@ -31,7 +32,7 @@ const dummyJob = () => ({
 
 //actually parse the json file we get back
 module.exports = function parseJson(json, job = dummyJob()) {
-  const jobId = job.id;
+  const { jobId } = job;
   const { projectId } = job.opts;
 
   //can't use urlData because its a temporary URL
@@ -41,24 +42,20 @@ module.exports = function parseJson(json, job = dummyJob()) {
   //keep the first 10 hits
   const allHits = json.iterations[0].hits;
 
+  //if we got no hits, just return an empty project as the patch
+  //todo - should be able to return an error message (might want to default to normal error handling? update client)
   if (!allHits || allHits.length === 0) {
-    return Promise.resolve(null);
+    return new Rollup({
+      project: new Project({ id: projectId }),
+    });
   }
 
   const hits = allHits.slice(0, 10);
 
   //get fasta
-  //todo - get genbank and actually parse it
+  //todo - get genbank and parse, so we have annotations
   return Promise.all(hits.map(hit => ncbi.getFasta(hit.accession)))
   .then((fastas) => {
-    //if we got no hits, just return an empty project as the patch
-    //todo - should be able to return an error message
-    if (!hits.length) {
-      return new Rollup({
-        project: new Project({ id: projectId }),
-      });
-    }
-
     //track block to sequence
     const blockToSequence = {};
 

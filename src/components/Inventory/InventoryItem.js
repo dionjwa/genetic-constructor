@@ -16,9 +16,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { focusForceBlocks, focusRole } from '../../actions/focus';
+import { focusForceBlocks } from '../../actions/focus';
 import { inspectorToggleVisibility, uiSetGrunt, uiSpin } from '../../actions/ui';
-import { block as blockDragType, role as roleDragType } from '../../constants/DragTypes';
+import { block as blockDragType } from '../../constants/DragTypes';
 import DnD from '../../graphics/dnd/dnd';
 import MouseTrap from '../../graphics/mousetrap';
 import '../../styles/InventoryItem.css';
@@ -49,7 +49,6 @@ export class InventoryItem extends Component {
     forceBlocks: PropTypes.array.isRequired,
     focusBlocks: PropTypes.array.isRequired,
     inspectorToggleVisibility: PropTypes.func.isRequired,
-    focusRole: PropTypes.func.isRequired,
     focusForceBlocks: PropTypes.func.isRequired,
     uiSetGrunt: PropTypes.func.isRequired,
     uiSpin: PropTypes.func.isRequired,
@@ -132,7 +131,7 @@ export class InventoryItem extends Component {
   }
 
   handleClick = () => {
-    const { item, onSelect, inventoryType, inspectorToggleVisibility, focusForceBlocks, focusRole } = this.props;
+    const { item, onSelect, inventoryType, inspectorToggleVisibility, focusForceBlocks } = this.props;
 
     this.setState({ skipFocus: false });
 
@@ -163,8 +162,6 @@ export class InventoryItem extends Component {
         //todo - this shouldnt be responsibility of this generic component. move into specific components.
         if (inventoryType === blockDragType) {
           focusForceBlocks([result]);
-        } else if (inventoryType === roleDragType) {
-          focusRole(result.id);
         }
         inspectorToggleVisibility(true);
       }
@@ -172,13 +169,13 @@ export class InventoryItem extends Component {
         this.setState({ loadError: false, loaded: result });
       }
     })
-      .catch((err) => {
-        console.log(err); //eslint-disable-line no-console
-        if (onSelect) {
-          this.setState({ loadError: true });
-        }
-      })
-      .then(() => this.setState({ loading: false, skipFocus: false }));
+    .catch((err) => {
+      console.log(err); //eslint-disable-line no-console
+      if (onSelect) {
+        this.setState({ loadError: true });
+      }
+    })
+    .then(() => this.setState({ loading: false, skipFocus: false }));
   };
 
   render() {
@@ -190,14 +187,13 @@ export class InventoryItem extends Component {
     const itemName = item.metadata.name || defaultName || 'Unnamed';
     const dataAttr = dataAttribute || `${inventoryType} ${item.id}`;
 
-
     return (
       <div
         className={`InventoryItem${
-      (!!image || !!svg) ? ' hasImage' : ''
-      }${(loading && !skipFocus) ? ' loading' : ''
-      }${(loadError) ? ' loadError' : ''
-      }${isSelected ? ' selected' : ''}`}
+          (!!image || !!svg) ? ' hasImage' : ''
+          }${(loading && !skipFocus) ? ' loading' : ''
+          }${(loadError) ? ' loadError' : ''
+          }${isSelected ? ' selected' : ''}`}
         ref={(el) => { this.itemElement = el; }}
         data-inventory={dataAttr}
       >
@@ -224,7 +220,6 @@ export default connect(state => ({
   forceBlocks: state.focus.forceBlocks,
 }), {
   focusForceBlocks,
-  focusRole,
   inspectorToggleVisibility,
   uiSetGrunt,
   uiSpin,

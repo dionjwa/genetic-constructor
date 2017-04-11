@@ -17,7 +17,7 @@
 constructor.extensions.register('blast', 'menu:block',
   (singleBlockSelected, block) => [{
     text: 'BLAST for similar sequences',
-    disabled: !singleBlockSelected || !block.hasSequence() || block.hasContents(),
+    disabled: !singleBlockSelected || !block.hasSequence() || block.hasContents() || block.sequence.length <= 10,
     action: () =>
       block.getSequence()
       .then(sequence => constructor.jobs.jobCreate(block.projectId, 'blast', { id: block.id, sequence }))
