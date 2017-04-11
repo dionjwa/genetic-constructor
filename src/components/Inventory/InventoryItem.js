@@ -16,7 +16,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { focusForceBlocks, focusRole } from '../../actions/focus';
+import { focusForceBlocks } from '../../actions/focus';
 import { inspectorToggleVisibility, uiSetGrunt, uiSpin } from '../../actions/ui';
 import { block as blockDragType, role as roleDragType } from '../../constants/DragTypes';
 import DnD from '../../graphics/dnd/dnd';
@@ -49,7 +49,6 @@ export class InventoryItem extends Component {
     forceBlocks: PropTypes.array.isRequired,
     focusBlocks: PropTypes.array.isRequired,
     inspectorToggleVisibility: PropTypes.func.isRequired,
-    focusRole: PropTypes.func.isRequired,
     focusForceBlocks: PropTypes.func.isRequired,
     uiSetGrunt: PropTypes.func.isRequired,
     uiSpin: PropTypes.func.isRequired,
@@ -190,7 +189,6 @@ export class InventoryItem extends Component {
     const itemName = item.metadata.name || defaultName || 'Unnamed';
     const dataAttr = dataAttribute || `${inventoryType} ${item.id}`;
 
-
     return (
       <div
         className={`InventoryItem${
@@ -224,7 +222,6 @@ export default connect(state => ({
   forceBlocks: state.focus.forceBlocks,
 }), {
   focusForceBlocks,
-  focusRole,
   inspectorToggleVisibility,
   uiSetGrunt,
   uiSpin,
