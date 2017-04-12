@@ -421,7 +421,7 @@ export class ConstructViewer extends Component {
 
     const extensionMenuItems = extensionsWithBlockMenus.length > 0 ? [
       {},
-      { text: 'Extensions', disabled: true },
+      { text: 'Plugins', disabled: true },
       ...flatten(extensionsWithBlockMenus),
     ] : [];
 
