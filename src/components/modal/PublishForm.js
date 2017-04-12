@@ -192,12 +192,10 @@ class PublishForm extends Component {
           <FormGroup label="License" labelTop>
             <div style={{ width: '350px' }}>
               <p>By selecting &apos;Publish&apos; below, you agree that your project will become available
-                license-free in the public domain under the <a
-                  href="https://creativecommons.org/publicdomain/zero/1.0/"
-                  target="_blank" rel="noopener noreferrer"
-                >Create Commons
-                  CCØ</a> license. <a href={SHARING_CREATIVE_COMMONS_CC0} target="_blank" rel="noopener noreferrer">Learn
-                  more...</a></p>
+                license-free in the public domain under the
+                <a href={SHARING_CREATIVE_COMMONS_CC0} target="_blank" rel="noopener noreferrer">Create Commons CCØ</a>&nbsp;
+                license. <a href={SHARING_IN_PUBLIC_INVENTORY} target="_blank" rel="noopener noreferrer">Learn more...</a>
+              </p>
               <br />
               <p><a href="mailto:geneticconstructor@autodesk.com">Contact us</a> if your project requires a more
                 restrictive license.</p>
