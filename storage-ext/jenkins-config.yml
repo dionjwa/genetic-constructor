@@ -4,7 +4,7 @@ environment: local
 # parameters used when calling cloudformation update-stack
 # NOTE set this value in the Jenkins job as it varies by environment
 cfn-stack-name: ""
-cfn-param-compose-file: docker-compose-api-quickstart.yml
+cfn-param-compose-file: docker-compose-aws-quickstart.yml
 cfn-param-compose-start-params: ""
 cfn-param-compose-cmd-prefix: ""
 tmp-cfn-status: CloudStackStatus.txt
