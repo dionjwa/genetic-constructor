@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import '../../styles/partscsv.css';
 import { blockOptionsAdd, blockStash } from '../../actions/blocks';
 import { uiShowPartsCSVImport, uiSpin } from '../../actions/ui';
+import { CSV_UPLOAD } from '../../constants/links';
 import { importFile } from '../../middleware/csv';
 import Block from '../../models/Block';
 import ModalWindow from '../modal/modalwindow';
@@ -172,7 +173,7 @@ class ImportPartsCSVModal extends Component {
               </button>
               <div className="link">
                 <span>Format documentation and sample .CSV files can be found
-                    <a className="blue-link" href="https://geneticconstructor.readme.io/v0.1/docs/csv-upload" target="_blank" rel="noopener noreferrer"> here</a>
+                    <a className="blue-link" href={CSV_UPLOAD} target="_blank" rel="noopener noreferrer"> here</a>
                 </span>
               </div>
             </form>

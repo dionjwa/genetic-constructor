@@ -20,10 +20,12 @@ import { connect } from 'react-redux';
 import '../../styles/genbank.css';
 import { projectList, projectLoad, projectOpen, projectSave } from '../../actions/projects';
 import { uiShowGenBankImport, uiSpin } from '../../actions/ui';
+import { CSV_UPLOAD } from '../../constants/links';
 import { importFile as importCsvFile } from '../../middleware/csv';
 import { importFile as importGenbankFile } from '../../middleware/genbank';
 import { projectGet, projectListAllBlocks } from '../../selectors/projects';
 import ModalWindow from '../modal/modalwindow';
+
 
 /**
  * Genbank import dialog.
@@ -177,7 +179,7 @@ class ImportGenBankModal extends Component {
                 <span>Format documentation and sample .CSV files can be found
                     <a
                       className="blue-link"
-                      href="https://geneticconstructor.readme.io/docs/csv-upload"
+                      href={CSV_UPLOAD}
                       target="_blank"
                       rel="noopener noreferrer"
                     >here</a>
