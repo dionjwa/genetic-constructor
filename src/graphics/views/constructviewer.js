@@ -454,8 +454,8 @@ export class ConstructViewer extends Component {
           this.selectEmptyBlocks();
         },
       },
-      ...GlobalNav.getSingleton().getEditMenuItems(),
       ...extensionMenuItems,
+      ...GlobalNav.getSingleton().getEditMenuItems(),
     ];
   };
 
