@@ -20,7 +20,7 @@ webapp:
 
 db:
   extends:
-    file: ./storage-ext/docker-compose-common.yml
+    file: ./storage-ext/docker-compose-local.yml
     service: db
   build: ./storage-ext/postgres/
 
@@ -28,7 +28,5 @@ redis:
   restart: always
   image: redis:3.2.0-alpine
   command: redis-server /usr/local/etc/redis/redis.conf
-  ports:
-    - "6379:6379"
   volumes:
     - ./redis.conf:/usr/local/etc/redis/redis.conf
