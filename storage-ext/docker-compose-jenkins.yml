@@ -1,12 +1,9 @@
 test:
   extends:
-    file: docker-compose-common.yml
+    file: docker-compose.yml
     service: api
-  build: .
   links:
     - db
-  ports:
-    - "4747:4747"
   command:
     npm run wait-n-jenkins
   environment:
@@ -17,6 +14,5 @@ test:
 
 db:
   extends:
-    file: docker-compose-common.yml
+    file: docker-compose-local.yml
     service: db
-  build: ./postgres/
