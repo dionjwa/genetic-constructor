@@ -18,6 +18,7 @@ import { routerMiddleware } from 'react-router-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
+import actionLoggingMiddleware from '../middleware/action_logging';
 import combinedReducerCreator from '../reducers/index';
 import pausableStore from './pausableStore';
 import saveLastActionMiddleware from './saveLastActionMiddleware';
@@ -34,6 +35,8 @@ const middleware = [
   saveLastActionMiddleware,
   //routing middleware so you can import actions from react-redux-router
   routerMiddleware(browserHistory),
+  // logging middleware for development
+  actionLoggingMiddleware,
 ];
 
 const storeCreationFunctions = [
