@@ -30,9 +30,8 @@ const commonsPath = path.resolve(__dirname, '../commons');
 
 const GLOBALS = {
   'process.env.NODE_ENV': DEBUG ? '"dev"' : '"production"',
-  __DEV__: DEBUG,
-  'process.env.BUILD': true,
-  'process.env.DEBUG_REDUX': DEBUG_REDUX,
+  'process.env.BUILD': JSON.stringify(true),
+  'process.env.DEBUG_REDUX': JSON.stringify(DEBUG_REDUX),
 };
 
 //get list of node modules for webpack to avoid bundling on server

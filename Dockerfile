@@ -1,7 +1,7 @@
 # Inherit from ubuntu docker image
 FROM node:boron
 
-MAINTAINER bionanodevops@autodesk.com # 2016-12-13
+MAINTAINER bionanodevops@autodesk.com # 2017-04-13
 
 ENV CXX g++-4.9
 RUN apt-get dist-upgrade -y
