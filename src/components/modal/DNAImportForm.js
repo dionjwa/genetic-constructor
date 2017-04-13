@@ -163,7 +163,7 @@ class DNAImportForm extends Component {
         }}
       >
         <div className="Modal-paddedContent">
-          <form className="Form" onSubmit={this.onSubmit}>
+          <form className="Form importdnaform" onSubmit={this.onSubmit}>
 
             <FormText
               value={this.state.sequence}
