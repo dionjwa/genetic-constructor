@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+.ignore
 .vscode
 node_modules
 npm-debug.log
@@ -26,3 +27,4 @@ coverage
 docs/jsdoc/genetic-constructor
 storage-app.md5
 compose-tmp/
+**sublime**
