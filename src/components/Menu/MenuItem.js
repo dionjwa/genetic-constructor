@@ -34,11 +34,16 @@ export default class MenuItem extends Component {
     action: PropTypes.func,
     disabled: PropTypes.bool,
     checked: PropTypes.bool,
+    indent: PropTypes.bool,
     shortcut: PropTypes.string,
     classes: PropTypes.string,
     close: PropTypes.func.isRequired,
     menuItems: PropTypes.array,
     openLeft: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    indent: false,
   };
 
   constructor() {
@@ -74,7 +79,7 @@ export default class MenuItem extends Component {
 
   render() {
     // indent if check able regardless of checked state
-    const indent = this.props.checked === true || this.props.checked === false;
+    const indent = this.props.indent || this.props.checked === true || this.props.checked === false;
     let check = null;
     if (indent) {
       check = <div className={this.props.checked ? 'menu-item-checked' : 'menu-item-unchecked'} />;

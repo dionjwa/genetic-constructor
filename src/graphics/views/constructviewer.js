@@ -417,11 +417,15 @@ export class ConstructViewer extends Component {
 
     const extensionsWithBlockMenus = extensionsByRegion('menu:block')
     .filter(manifest => manifest.render['menu:block'])
-    .map(manifest => manifest.render['menu:block'](singleBlock, firstBlock));
+    .map(manifest =>
+      manifest.render['menu:block'](singleBlock, firstBlock)
+      // Indent all extension menuItems
+      .map(menuItem => Object.assign({}, menuItem, { indent: true })),
+    );
 
     const extensionMenuItems = extensionsWithBlockMenus.length > 0 ? [
       {},
-      { text: 'Extensions', disabled: true },
+      { text: 'Plugins', disabled: true },
       ...flatten(extensionsWithBlockMenus),
     ] : [];
 
@@ -454,8 +458,8 @@ export class ConstructViewer extends Component {
           this.selectEmptyBlocks();
         },
       },
-      ...GlobalNav.getSingleton().getEditMenuItems(),
       ...extensionMenuItems,
+      ...GlobalNav.getSingleton().getEditMenuItems(),
     ];
   };
 
