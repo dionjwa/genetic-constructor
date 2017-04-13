@@ -16,7 +16,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import '../../styles/importdnaform.css';
 import { blockSetSequence } from '../../actions/blocks';
 import { focusBlocks } from '../../actions/focus';
 import { uiSetGrunt, uiShowDNAImport } from '../../actions/ui';
