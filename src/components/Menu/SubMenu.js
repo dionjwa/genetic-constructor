@@ -46,6 +46,7 @@ export default function SubMenu(props) {
               menuItems={item.menuItems}
               close={props.close}
               openLeft={props.openLeft}
+              indent={item.indent}
             />) :
             (<MenuSeparator key={index} />)
         );
