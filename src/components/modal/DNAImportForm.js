@@ -16,7 +16,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import '../../styles/importdnaform.css';
 import { blockSetSequence } from '../../actions/blocks';
 import { focusBlocks } from '../../actions/focus';
 import { uiSetGrunt, uiShowDNAImport } from '../../actions/ui';
@@ -163,7 +162,7 @@ class DNAImportForm extends Component {
         }}
       >
         <div className="Modal-paddedContent">
-          <form className="Form" onSubmit={this.onSubmit}>
+          <form className="Form importdnaform" onSubmit={this.onSubmit}>
 
             <FormText
               value={this.state.sequence}
