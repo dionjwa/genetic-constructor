@@ -109,7 +109,7 @@ function blastId(id, options = {}) {
     const fs = require('fs'); //eslint-disable-line global-require
     const path = require('path'); //eslint-disable-line global-require
     return new Promise((resolve, reject) => {
-      fs.readFile(path.resolve(__dirname, 'example.xml'), (err, result) => {
+      fs.readFile(path.resolve(__dirname, 'example.xml'), 'utf8', (err, result) => {
         if (err) {
           return reject(err);
         }

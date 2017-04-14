@@ -78,6 +78,7 @@ describe('Extensions', () => {
         return jobApi.jobGetResult(projectId, jobId);
       })
       .then(result => {
+        console.log(result);
         Rollup.validate(result, true);
       });
     });
