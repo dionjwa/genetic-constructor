@@ -1,7 +1,7 @@
 {
   "name": "heroku-constructor-staging",
   "description": "Heroku deployment of Constructor, no auth",
-  "repository": "https://github.com/Autodesk/genetic-constructor",
+  "repository": "https://github.com/autodesk-lifesciences/genetic-constructor",
   "scripts": {
   },
   "env": {
