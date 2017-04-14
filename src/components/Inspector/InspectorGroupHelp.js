@@ -49,7 +49,7 @@ class InspectorGroupHelp extends Component {
       <div className="Section">Information for Developers</div>
       <a target="_blank" rel="noopener noreferrer" href="https://geneticconstructor.readme.io/docs/how-to-contribute">Contributing to Genetic Constructor</a>
       <a target="_blank" rel="noopener noreferrer" href="https://geneticconstructor.readme.io/docs/about-extensions">Authoring Plugins</a>
-      <a target="_blank" rel="noopener noreferrer" href="https://github.com/Autodesk/genetic-constructor">API Documentation</a>
+      <a target="_blank" rel="noopener noreferrer" href="https://github.com/autodesk-lifesciences/genetic-constructor">API Documentation</a>
       <br />
       <div className="Section">Get Support</div>
       <a target="_blank" rel="noopener noreferrer" href="https://geneticconstructor.readme.io/discuss">Community Discussions</a>

@@ -26,7 +26,7 @@ All calls for fetching projects will return the whole schema defined above.
 
 All versions of a `projectId` must be owned by the same `owner`. This is enforced by ensuring that (`id`, `version`) is unique and (`owner` `id`, `version`) is unique.
 
-_This isn't actually true, the above doesn't make sense, and this is a bug at the time of this writing._ [Issue #1267](https://github.com/Autodesk/genetic-constructor/issues/1267)
+_This isn't actually true, the above doesn't make sense, and this is a bug at the time of this writing._ [Issue #1267](https://github.com/autodesk-lifesciences/genetic-constructor/issues/1267)
 
 #### Creating Projects
 

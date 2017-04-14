@@ -4,7 +4,7 @@ The Genetic Constructor `Order` API allows for storing typed metadata and JSON d
 
 An order record possesses a unique `uuid` created by the RDMBS. Each order record has a mandatory `id` string provided by the caller. Two orders cannot exist with the same `owner` and `id`. Unlike [Snapshots](./SNAPSHOTS.md) multiple orders may exist for the same project record version, `projectId` and `projectVersion`.
 
-_At the time of this writing there is a data consistency bug trackced by [Issue #1270](https://github.com/Autodesk/genetic-constructor/issues/1270)_
+_At the time of this writing there is a data consistency bug trackced by [Issue #1270](https://github.com/autodesk-lifesciences/genetic-constructor/issues/1270)_
 
 #### v0 schema
 
@@ -76,7 +76,7 @@ Check to see if any orders exist for the given `projectId`. Also allows an optio
 
 Fetch an order using an `id`.
 
-These methods assume the `id` field is unique across **ALL** order records, which currently isn't enforced by the RDBMS. See [Issue #1270](https://github.com/Autodesk/genetic-constructor/issues/1270)
+These methods assume the `id` field is unique across **ALL** order records, which currently isn't enforced by the RDBMS. See [Issue #1270](https://github.com/autodesk-lifesciences/genetic-constructor/issues/1270)
 
 `GET /api/orders/id/:orderId`
 
