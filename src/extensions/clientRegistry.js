@@ -125,10 +125,11 @@ export const registerManifest = (manifest) => {
     }
 
     //checks out, so assign to registry + do some setup for render functions
+    const extensionIsActiveWithoutRegistry = getPath(extensionConfig, [name, 'active'], false);
     Object.assign(registry, {
       [name]: Object.assign(manifest, {
         _downloaded: +Date.now(),
-        _activated: extensionIsActive(manifest.name) ? +Date.now() : null,
+        _activated: extensionIsActiveWithoutRegistry ? +Date.now() : null,
         //render obj is map of region to payload
         render: {},
       }),
