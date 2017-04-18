@@ -316,3 +316,8 @@ export const uiClickFeedbackStar = starIndex => ({
   type: ActionTypes.UI_FEEDBACK_STARS_CHANGE,
   stars: starIndex + 1,
 });
+
+export const uiChangeFeedbackRecommend = recommend => ({
+  type: ActionTypes.UI_FEEDBACK_RECOMMEND_CHANGE,
+  recommend,
+});

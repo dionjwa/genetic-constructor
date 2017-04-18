@@ -17,9 +17,10 @@ import * as ActionTypes from '../../constants/ActionTypes';
 
 export const initialState = {
   anon: false,
+  recommend: 2,
+  stars: 0,
   text: '',
   toIndex: 0,
-  stars: 0,
 };
 
 export default function feedback(state = initialState, action) {
@@ -42,6 +43,11 @@ export default function feedback(state = initialState, action) {
     case ActionTypes.UI_FEEDBACK_STARS_CHANGE:
       return Object.assign({}, state, {
         stars: action.stars,
+      });
+
+    case ActionTypes.UI_FEEDBACK_RECOMMEND_CHANGE:
+      return Object.assign({}, state, {
+        recommend: action.recommend,
       });
 
     default:

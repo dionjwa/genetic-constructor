@@ -21,6 +21,7 @@ import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects
 import {
   uiSetGrunt,
   uiClickFeedbackStar,
+  uiChangeFeedbackRecommend,
   uiChangeFeedbackText,
   uiChangeFeedbackToIndex,
   uiToggleFeedbackAnon,
@@ -52,6 +53,7 @@ class InspectorGroupFeedback extends Component {
     uiSetGrunt: PropTypes.func.isRequired,
     uiClickFeedbackStar: PropTypes.func.isRequired,
     uiChangeFeedbackText: PropTypes.func.isRequired,
+    uiChangeFeedbackRecommend: PropTypes.func.isRequired,
     uiChangeFeedbackToIndex: PropTypes.func.isRequired,
     uiToggleFeedbackAnon: PropTypes.func.isRequired,
     userGetUser: PropTypes.func.isRequired,
@@ -60,6 +62,7 @@ class InspectorGroupFeedback extends Component {
     text: PropTypes.string.isRequired,
     anon: PropTypes.bool.isRequired,
     toIndex: PropTypes.number.isRequired,
+    recommend: PropTypes.number.isRequired,
     stars: PropTypes.number.isRequired,
   };
 
@@ -77,11 +80,11 @@ class InspectorGroupFeedback extends Component {
    * @param event
    */
   onRecommendChanged = debounce(() => {
-    // value is 0..4
-    const sliderRating = Number.parseFloat(this.refs.rangeSlider.value);
+    const sliderRating = parseInt(this.rangeSlider.value, 10);
+    this.props.uiChangeFeedbackRecommend(sliderRating);
     this.props.uiSetGrunt('Thanks for your feedback.');
     heapTrack('Slider rating', { sliderRating });
-  }, 2000, { leading: false, trailing: true });
+  }, 500, { leading: false, trailing: true });
 
   /**
    * toggle anon mode
@@ -192,7 +195,15 @@ class InspectorGroupFeedback extends Component {
       </div>
       <hr />
       <span className="bold">I would recommend this software to others.</span>
-      <input type="range" min="0" max="4" step="1" defaultValue="2" onInput={this.onRecommendChanged} ref="rangeSlider" />
+      <input
+        type="range"
+        min="0"
+        max="4"
+        step="1"
+        defaultValue={this.props.recommend}
+        onInput={this.onRecommendChanged}
+        ref={(el) => { this.rangeSlider = el; }}
+      />
       <div className="range-labels">
         <span className="light">Strongly disagree</span>
         <span className="light" style={{ float: 'right' }}>Strongly agree</span>
@@ -250,6 +261,7 @@ export default connect(
   state => state.ui.feedback,
   {
     uiClickFeedbackStar,
+    uiChangeFeedbackRecommend,
     uiChangeFeedbackText,
     uiChangeFeedbackToIndex,
     uiSetGrunt,
