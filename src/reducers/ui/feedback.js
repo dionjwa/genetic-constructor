@@ -16,6 +16,7 @@ limitations under the License.
 import * as ActionTypes from '../../constants/ActionTypes';
 
 export const initialState = {
+  anon: false,
   text: '',
 };
 
@@ -24,6 +25,11 @@ export default function feedback(state = initialState, action) {
     case ActionTypes.UI_FEEDBACK_TEXT_CHANGE:
       return Object.assign({}, state, {
         text: action.text,
+      });
+
+    case ActionTypes.UI_FEEDBACK_ANON_TOGGLE:
+      return Object.assign({}, state, {
+        anon: !state.anon,
       });
 
     default:

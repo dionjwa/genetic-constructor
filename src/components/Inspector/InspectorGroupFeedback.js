@@ -18,7 +18,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reportError } from '../../middleware/reporting';
 import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects';
-import { uiSetGrunt, uiChangeFeedbackText } from '../../actions/ui';
+import {
+  uiSetGrunt,
+  uiChangeFeedbackText,
+  uiToggleFeedbackAnon,
+} from '../../actions/ui';
 import Selector from '../orders/selector';
 import { userGetUser } from '../../selectors/user';
 import '../../styles/InspectorGroupFeedback.css';
@@ -40,6 +44,7 @@ class InspectorGroupFeedback extends Component {
   static propTypes = {
     uiSetGrunt: PropTypes.func.isRequired,
     uiChangeFeedbackText: PropTypes.func.isRequired,
+    uiToggleFeedbackAnon: PropTypes.func.isRequired,
     userGetUser: PropTypes.func.isRequired,
     projectGetCurrentId: PropTypes.func.isRequired,
     projectGetVersion: PropTypes.func.isRequired,
@@ -56,7 +61,6 @@ class InspectorGroupFeedback extends Component {
       star3: false,
       star4: false,
       starClicked: false,
-      anon: false,
     };
   }
 
@@ -77,7 +81,7 @@ class InspectorGroupFeedback extends Component {
    * toggle anon mode
    */
   onAnonChanged = () => {
-    this.setState({ anon: !this.state.anon });
+    this.props.uiToggleFeedbackAnon();
   };
 
   onTextChanged = (e) => {
@@ -89,7 +93,7 @@ class InspectorGroupFeedback extends Component {
    */
   onPublishFeedback = () => {
     const team = this.state.feedbackTo;
-    const anonymous = this.state.anon;
+    const anonymous = this.props.anon;
     const message = this.props.text;
 
     const url = window.location.href;
@@ -225,7 +229,7 @@ class InspectorGroupFeedback extends Component {
       <span className="light">Feedback is published on Github</span>
       <br />
       <br />
-      <input type="checkbox" defaultValue={this.state.anon} onChange={this.onAnonChanged} />
+      <input type="checkbox" checked={this.props.anon} onChange={this.onAnonChanged} />
       <span className="light checkbox-label">Publish Anonymously</span>
       <button className="publish-button" onClick={this.onPublishFeedback}>Publish</button>
       <hr />
@@ -252,12 +256,14 @@ class InspectorGroupFeedback extends Component {
   }
 }
 
-export default connect(state => ({
-  text: state.ui.feedback.text,
-}), {
-  uiChangeFeedbackText,
-  uiSetGrunt,
-  userGetUser,
-  projectGetCurrentId,
-  projectGetVersion,
-})(InspectorGroupFeedback);
+export default connect(
+  state => state.ui.feedback,
+  {
+    uiChangeFeedbackText,
+    uiSetGrunt,
+    uiToggleFeedbackAnon,
+    userGetUser,
+    projectGetCurrentId,
+    projectGetVersion,
+  },
+)(InspectorGroupFeedback);
