@@ -1,7 +1,7 @@
 const loggingMiddleware = store => next => (action) => {
   const result = next(action);
 
-  if (process.env.DEBUG_REDUX === 'true') {
+  if (process.env.DEBUG_REDUX) {
     if (console.group) {
       console.group(action.type);
     }
