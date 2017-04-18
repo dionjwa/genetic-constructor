@@ -11,6 +11,7 @@ webapp:
     VERBOSE_REQUEST_LOGS: ${VERBOSE_REQUEST_LOGS}
     EMAIL: ${EMAIL}
     SEND_GRID_LIST_ID: ${SEND_GRID_LIST_ID}
+    GSL_SERVER: ${GSL_SERVER}
   command:
     npm run start-instance
   log_driver: json-file
