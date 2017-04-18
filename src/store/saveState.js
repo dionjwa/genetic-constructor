@@ -47,7 +47,8 @@ export const noteFailure = (projectId, err) => {
 export const getProjectSaveState = (projectId) => {
   invariant(projectId, 'must pass project ID');
   const state = saveState.get(projectId) || {};
-  const { updated = 0, lastFailed = 0, version = null, lastErr = null, lastErrOffline = false } = state;
+  const now = +Date.now();
+  const { updated = now, lastFailed = now, version = null, lastErr = null, lastErrOffline = false } = state;
 
   return {
     updated,
@@ -55,7 +56,7 @@ export const getProjectSaveState = (projectId) => {
     lastFailed,
     lastErr,
     lastErrOffline,
-    saveDelta: +Date.now() - updated,
+    saveDelta: +now - updated,
     saveSuccessful: lastFailed <= updated,
   };
 };

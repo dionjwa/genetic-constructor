@@ -2,7 +2,7 @@
 
 #### Background
 
-Prior to the [v0.7.0](https://github.com/Autodesk/genetic-constructor/releases/tag/v0.7.0) release, the Genetic Constructor application stored all of its data to the local filesystem. This approach provided simplicity and use of file-system utilities for manipulating data, but resulted in the following limitations.
+Prior to the [v0.7.0](https://github.com/autodesk-lifesciences/genetic-constructor/releases/tag/v0.7.0) release, the Genetic Constructor application stored all of its data to the local filesystem. This approach provided simplicity and use of file-system utilities for manipulating data, but resulted in the following limitations.
 
 * A single, local filesystem can not be shared by multiple systems to provide increased user concurrency, workload segregation, or redundancy.
 * A shared filesystem (i.e. NFS) brings cacheing and locking complexity in order to provide ACID-like storage operations.
@@ -52,6 +52,6 @@ The first step in local development, even running tests natively with `node` via
 
 ```npm run db``` 
 
-This command will build and start a PostgreSQL DB in Docker within an interactive terminal, meaning the terminal will be blocked for the duration the DB is running. Data will **NOT** be persisted between executions of this command. All DB logs will be logged to the terminal and `ctrl-c` will kill the DB and remove the Docker container. It's possible to configure the PostgreSQL Docker image to use a file system that is persisted outside of the Docker container. [`docker-compose-quickstart.yml`](https://github.com/Autodesk/genetic-constructor/blob/master/storage-ext/docker-compose-quickstart.yml#L21) contains an example of using `docker-compose` to run the DB Container with a persisted storage volume.
+This command will build and start a PostgreSQL DB in Docker within an interactive terminal, meaning the terminal will be blocked for the duration the DB is running. Data will **NOT** be persisted between executions of this command. All DB logs will be logged to the terminal and `ctrl-c` will kill the DB and remove the Docker container. It's possible to configure the PostgreSQL Docker image to use a file system that is persisted outside of the Docker container. [`docker-compose-quickstart.yml`](https://github.com/autodesk-lifesciences/genetic-constructor/blob/master/storage-ext/docker-compose-quickstart.yml#L21) contains an example of using `docker-compose` to run the DB Container with a persisted storage volume.
 
 Once you have a DB running, `npm test` and `npm start` can be used like most Node.js applications, after running `npm install`, of course.
