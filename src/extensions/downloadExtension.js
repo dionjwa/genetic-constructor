@@ -83,5 +83,3 @@ export const downloadExtension = (key, file) => {
 export const isDownloaded = (key, file) => {
   return !!cached[key] && cached[key][file] === true;
 };
-
-export default downloadExtension;
