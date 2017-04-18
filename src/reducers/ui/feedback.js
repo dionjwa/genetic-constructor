@@ -13,18 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import { combineReducers } from 'redux';
+import * as ActionTypes from '../../constants/ActionTypes';
 
-import detailView from './ui/detailView';
-import feedback from './ui/feedback';
-import inspector from './ui/inspector';
-import inventory from './ui/inventory';
-import modals from './ui/modals';
+export const initialState = {
+  text: '',
+};
 
-export default combineReducers({
-  modals,
-  detailView,
-  inspector,
-  inventory,
-  feedback,
-});
+export default function feedback(state = initialState, action) {
+  switch (action.type) {
+    case ActionTypes.UI_FEEDBACK_TEXT_CHANGE:
+      return Object.assign({}, state, {
+        text: action.text,
+      });
+
+    default:
+      return state;
+  }
+}

@@ -18,7 +18,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reportError } from '../../middleware/reporting';
 import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects';
-import { uiSetGrunt } from '../../actions/ui';
+import { uiSetGrunt, uiChangeFeedbackText } from '../../actions/ui';
 import Selector from '../orders/selector';
 import { userGetUser } from '../../selectors/user';
 import '../../styles/InspectorGroupFeedback.css';
@@ -39,9 +39,11 @@ const heapTrack = function (message, object) {
 class InspectorGroupFeedback extends Component {
   static propTypes = {
     uiSetGrunt: PropTypes.func.isRequired,
+    uiChangeFeedbackText: PropTypes.func.isRequired,
     userGetUser: PropTypes.func.isRequired,
     projectGetCurrentId: PropTypes.func.isRequired,
     projectGetVersion: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired,
   };
 
   constructor() {
@@ -78,13 +80,17 @@ class InspectorGroupFeedback extends Component {
     this.setState({ anon: !this.state.anon });
   };
 
+  onTextChanged = (e) => {
+    this.props.uiChangeFeedbackText(e.target.value);
+  };
+
   /**
    * user wants to publish feedback
    */
   onPublishFeedback = () => {
     const team = this.state.feedbackTo;
     const anonymous = this.state.anon;
-    const message = this.refs.feedbackText.value.trim();
+    const message = this.props.text;
 
     const url = window.location.href;
     const user = this.props.userGetUser();
@@ -212,7 +218,8 @@ class InspectorGroupFeedback extends Component {
       <textarea
         placeholder="Enter your feedback here"
         rows="20"
-        ref="feedbackText"
+        onChange={this.onTextChanged}
+        value={this.props.text}
       />
       <br />
       <span className="light">Feedback is published on Github</span>
@@ -245,7 +252,10 @@ class InspectorGroupFeedback extends Component {
   }
 }
 
-export default connect(null, {
+export default connect(state => ({
+  text: state.ui.feedback.text,
+}), {
+  uiChangeFeedbackText,
   uiSetGrunt,
   userGetUser,
   projectGetCurrentId,

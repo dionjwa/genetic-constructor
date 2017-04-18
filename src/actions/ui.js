@@ -297,3 +297,8 @@ export const uiShowProjectDeleteModal = (forceState, projectDeleteForceProjectId
   });
   return nextState;
 };
+
+export const uiChangeFeedbackText = text => ({
+  type: ActionTypes.UI_FEEDBACK_TEXT_CHANGE,
+  text,
+});
