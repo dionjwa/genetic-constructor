@@ -22,16 +22,13 @@ WORKDIR /app
 #setup node
 ADD package.json /app/package.json
 ADD storage-ext /app/storage-ext
+# explicitly control which scripts run 
 RUN npm install
+# Steps below mirroring *some* of the postinstall scripts (skipping extensions and selenium)
+# ASSUME THIS HAS BEEN RUN before building this Docerfile. Extension pulled in via ADD statement below
+# RUN npm run install-extensions || true
 
 ADD . /app
-
-#install extensions, continue even if errors
-RUN npm run install-extensions || true
-
-# add docs, even if package.json hasnt changed
-RUN npm run jsdoc
-
 RUN cd /app
 
 # Redis now launch via docker-compose and is referenced via link
