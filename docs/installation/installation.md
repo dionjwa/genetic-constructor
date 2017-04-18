@@ -21,6 +21,15 @@ Easiest way to get set up, using mocked authentication. In this installation, th
 
 `npm run start`
 
+### Selenium Integration Tests
+
+End-to-end tests are in the `./test-e2e` directory. Selenium must be installed first.
+
+```
+npm run selenium
+npm run nightwatch
+```
+
 ### In a Docker Container
 
 ```
