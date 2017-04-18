@@ -31,5 +31,7 @@ RUN npm install
 ADD . /app
 RUN cd /app
 
+RUN npm run jsdoc
+
 # Redis now launch via docker-compose and is referenced via link
 CMD  ["npm" , "run", "start-instance"]
