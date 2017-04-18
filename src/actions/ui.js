@@ -297,3 +297,27 @@ export const uiShowProjectDeleteModal = (forceState, projectDeleteForceProjectId
   });
   return nextState;
 };
+
+export const uiChangeFeedbackText = text => ({
+  type: ActionTypes.UI_FEEDBACK_TEXT_CHANGE,
+  text,
+});
+
+export const uiToggleFeedbackAnon = () => ({
+  type: ActionTypes.UI_FEEDBACK_ANON_TOGGLE,
+});
+
+export const uiChangeFeedbackToIndex = toIndex => ({
+  type: ActionTypes.UI_FEEDBACK_TO_INDEX_CHANGE,
+  toIndex,
+});
+
+export const uiClickFeedbackStar = starIndex => ({
+  type: ActionTypes.UI_FEEDBACK_STARS_CHANGE,
+  stars: starIndex + 1,
+});
+
+export const uiChangeFeedbackRecommend = recommend => ({
+  type: ActionTypes.UI_FEEDBACK_RECOMMEND_CHANGE,
+  recommend,
+});

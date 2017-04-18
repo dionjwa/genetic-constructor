@@ -13,15 +13,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-import debounce from 'lodash.debounce';
+import { debounce, throttle } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reportError } from '../../middleware/reporting';
 import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects';
-import { uiSetGrunt } from '../../actions/ui';
+import {
+  uiSetGrunt,
+  uiClickFeedbackStar,
+  uiChangeFeedbackRecommend,
+  uiChangeFeedbackText,
+  uiChangeFeedbackToIndex,
+  uiToggleFeedbackAnon,
+} from '../../actions/ui';
 import Selector from '../orders/selector';
 import { userGetUser } from '../../selectors/user';
 import '../../styles/InspectorGroupFeedback.css';
+
+const TO_OPTIONS = [
+  'Autodesk GSL: Editor Team',
+  'Genetic Constructor Team',
+];
 
 /**
  * tracking via heap
@@ -39,22 +51,25 @@ const heapTrack = function (message, object) {
 class InspectorGroupFeedback extends Component {
   static propTypes = {
     uiSetGrunt: PropTypes.func.isRequired,
+    uiClickFeedbackStar: PropTypes.func.isRequired,
+    uiChangeFeedbackText: PropTypes.func.isRequired,
+    uiChangeFeedbackRecommend: PropTypes.func.isRequired,
+    uiChangeFeedbackToIndex: PropTypes.func.isRequired,
+    uiToggleFeedbackAnon: PropTypes.func.isRequired,
     userGetUser: PropTypes.func.isRequired,
     projectGetCurrentId: PropTypes.func.isRequired,
     projectGetVersion: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired,
+    anon: PropTypes.bool.isRequired,
+    toIndex: PropTypes.number.isRequired,
+    recommend: PropTypes.number.isRequired,
+    stars: PropTypes.number.isRequired,
   };
 
   constructor() {
     super();
     this.state = {
-      feedbackTo: this.toOptions[0],
-      star0: false,
-      star1: false,
-      star2: false,
-      star3: false,
-      star4: false,
-      starClicked: false,
-      anon: false,
+      mouseStars: 0,
     };
   }
 
@@ -65,26 +80,30 @@ class InspectorGroupFeedback extends Component {
    * @param event
    */
   onRecommendChanged = debounce(() => {
-    // value is 0..4
-    const sliderRating = Number.parseFloat(this.refs.rangeSlider.value);
+    const sliderRating = parseInt(this.rangeSlider.value, 10);
+    this.props.uiChangeFeedbackRecommend(sliderRating);
     this.props.uiSetGrunt('Thanks for your feedback.');
     heapTrack('Slider rating', { sliderRating });
-  }, 2000, { leading: false, trailing: true });
+  }, 500, { leading: false, trailing: true });
 
   /**
    * toggle anon mode
    */
   onAnonChanged = () => {
-    this.setState({ anon: !this.state.anon });
+    this.props.uiToggleFeedbackAnon();
   };
+
+  onTextChanged = throttle(() => {
+    this.props.uiChangeFeedbackText(this.feedbackInput.value);
+  }, 500, { leading: false, trailing: true });
 
   /**
    * user wants to publish feedback
    */
   onPublishFeedback = () => {
-    const team = this.state.feedbackTo;
-    const anonymous = this.state.anon;
-    const message = this.refs.feedbackText.value.trim();
+    const team = TO_OPTIONS[this.props.toIndex];
+    const anonymous = this.props.anon;
+    const message = this.props.text;
 
     const url = window.location.href;
     const user = this.props.userGetUser();
@@ -115,84 +134,76 @@ class InspectorGroupFeedback extends Component {
    * user clicked a star rating
    * @param index 0..4
    */
-  starRating(index) {
-    const value = Number.parseFloat(index);
-    this.setState({ starClicked: true });
+  clickStar(starIndex) {
+    this.props.uiClickFeedbackStar(starIndex);
     this.props.uiSetGrunt('Thanks for your feedback.');
-    heapTrack('Star Rating', { value });
+    heapTrack('Star Rating', { value: starIndex + 1 });
   }
 
   /**
    * mouse over a star
    * @param index
    */
-  overStar = (index) => {
-    // do not reset stars on mouse leave if the user already clicked a star
-    if (index === -1 && this.state.starClicked) {
-      return;
-    }
-    this.setState({
-      star0: index >= 0,
-      star1: index >= 1,
-      star2: index >= 2,
-      star3: index >= 3,
-      star4: index >= 4,
-    });
+  overStar = (starIndex) => {
+    this.setState({ mouseStars: starIndex + 1 });
   };
 
   /**
    * when the destination for feedback is changed
    * @param val
    */
-  feedbackToChanged = (val) => {
-    this.setState({
-      feedbackTo: val,
-    });
+  toIndexChanged = (val) => {
+    this.props.uiChangeFeedbackToIndex(TO_OPTIONS.indexOf(val));
   };
 
-  toOptions = [
-    'Autodesk GSL: Editor Team',
-    'Genetic Constructor Team',
-  ];
-
   render() {
+    const stars = Math.max(this.state.mouseStars, this.props.stars);
+
     return (<div className="InspectorGroupFeedback">
       <span className="bold">How would you rate this software right now?</span>
       <div className="star-box">
         <div
-          className={`star-five star-five-small star-0 ${this.state.star0 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(0)}
+          className={`star-five star-five-small star-0 ${stars > 0 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(0)}
           onMouseEnter={() => this.overStar(0)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-1 ${this.state.star1 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(1)}
+          className={`star-five star-five-small star-1 ${stars > 1 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(1)}
           onMouseEnter={() => this.overStar(1)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-2 ${this.state.star2 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(2)}
+          className={`star-five star-five-small star-2 ${stars > 2 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(2)}
           onMouseEnter={() => this.overStar(2)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-3 ${this.state.star3 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(3)}
+          className={`star-five star-five-small star-3 ${stars > 3 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(3)}
           onMouseEnter={() => this.overStar(3)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-4 ${this.state.star4 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(4)}
+          className={`star-five star-five-small star-4 ${stars > 4 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(4)}
           onMouseEnter={() => this.overStar(4)}
           onMouseLeave={() => this.overStar(-1)}
         />
       </div>
       <hr />
       <span className="bold">I would recommend this software to others.</span>
-      <input type="range" min="0" max="4" step="1" defaultValue="2" onInput={this.onRecommendChanged} ref="rangeSlider" />
+      <input
+        type="range"
+        min="0"
+        max="4"
+        step="1"
+        defaultValue={this.props.recommend}
+        onInput={this.onRecommendChanged}
+        ref={(el) => { this.rangeSlider = el; }}
+      />
       <div className="range-labels">
         <span className="light">Strongly disagree</span>
         <span className="light" style={{ float: 'right' }}>Strongly agree</span>
@@ -203,22 +214,24 @@ class InspectorGroupFeedback extends Component {
       <br />
       <span className="light">To</span>
       <Selector
-        options={this.toOptions}
-        onChange={this.feedbackToChanged}
+        options={TO_OPTIONS}
+        onChange={this.toIndexChanged}
         disabled={false}
-        value={this.state.feedbackTo}
+        value={TO_OPTIONS[this.props.toIndex]}
       />
       <br />
       <textarea
         placeholder="Enter your feedback here"
         rows="20"
-        ref="feedbackText"
+        onChange={this.onTextChanged}
+        defaultValue={this.props.text}
+        ref={(el) => { this.feedbackInput = el; }}
       />
       <br />
       <span className="light">Feedback is published on Github</span>
       <br />
       <br />
-      <input type="checkbox" defaultValue={this.state.anon} onChange={this.onAnonChanged} />
+      <input type="checkbox" checked={this.props.anon} onChange={this.onAnonChanged} />
       <span className="light checkbox-label">Publish Anonymously</span>
       <button className="publish-button" onClick={this.onPublishFeedback}>Publish</button>
       <hr />
@@ -245,9 +258,17 @@ class InspectorGroupFeedback extends Component {
   }
 }
 
-export default connect(null, {
-  uiSetGrunt,
-  userGetUser,
-  projectGetCurrentId,
-  projectGetVersion,
-})(InspectorGroupFeedback);
+export default connect(
+  state => state.ui.feedback,
+  {
+    uiClickFeedbackStar,
+    uiChangeFeedbackRecommend,
+    uiChangeFeedbackText,
+    uiChangeFeedbackToIndex,
+    uiSetGrunt,
+    uiToggleFeedbackAnon,
+    userGetUser,
+    projectGetCurrentId,
+    projectGetVersion,
+  },
+)(InspectorGroupFeedback);
