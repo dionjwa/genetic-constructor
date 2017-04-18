@@ -48,7 +48,7 @@ export const getProjectSaveState = (projectId) => {
   invariant(projectId, 'must pass project ID');
   const state = saveState.get(projectId) || {};
   const now = +Date.now();
-  const { updated = now, lastFailed = now, version = null, lastErr = null, lastErrOffline = false } = state;
+  const { updated = now, lastFailed = 0, version = null, lastErr = null, lastErrOffline = false } = state;
 
   return {
     updated,
