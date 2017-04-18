@@ -5,10 +5,10 @@ const loggingMiddleware = store => next => (action) => {
     if (console.group) {
       console.group(action.type);
     }
-    
+
     console.log('dispatching', action);
     console.log('next state', store.getState());
-    
+
     if (console.groupEnd) {
       console.groupEnd(action.type);
     }
