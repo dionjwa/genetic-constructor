@@ -29,6 +29,7 @@ addons:
 #- docker ps -a
 install:
 - npm install
+- npm run install-extensions
 script:
 - npm run lint
 - PGPORT=60914 npm run test-coverage-report
