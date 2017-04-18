@@ -3,11 +3,14 @@
   "version" : "0.0.1",
   "description": "list of the default extensions for genome designer",
   "dependencies": {
-    "testClient" : "../../extensions/testClient",
-    "testPrivate" : "../../extensions/testPrivate",
-    "testErrorServer" : "../../extensions/testErrorServer",
     "GC-GSL-Editor" : "autodesk-lifesciences/gc-gsl-editor#v1.1.2",
     "GC-Sequence-Viewer": "autodesk-lifesciences/sequence-viewer",
     "blast": "../../extensions/blast"
+  },
+  "devDependencies": {
+    "testClient" : "../../extensions/testClient",
+    "testPrivate" : "../../extensions/testPrivate",
+    "testErrorServer" : "../../extensions/testErrorServer"
   }
+
 }

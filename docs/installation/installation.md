@@ -17,6 +17,7 @@ Genetic Constructor can be run a few different ways.
 Easiest way to get set up, using mocked authentication. In this installation, there are no accounts. Everything will function normally, with the caveat that the user is forced and has a static ID. This is currently the recommended configuration for local development.
 
 `npm install`
+`npm run install-extensions`
 
 `npm run start`
 
