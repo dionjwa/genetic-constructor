@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-import debounce from 'lodash.debounce';
+import { debounce, throttle } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reportError } from '../../middleware/reporting';
@@ -93,9 +93,9 @@ class InspectorGroupFeedback extends Component {
     this.props.uiToggleFeedbackAnon();
   };
 
-  onTextChanged = (e) => {
-    this.props.uiChangeFeedbackText(e.target.value);
-  };
+  onTextChanged = throttle(() => {
+    this.props.uiChangeFeedbackText(this.feedbackInput.value);
+  }, 500, { leading: false, trailing: true });
 
   /**
    * user wants to publish feedback
@@ -224,7 +224,8 @@ class InspectorGroupFeedback extends Component {
         placeholder="Enter your feedback here"
         rows="20"
         onChange={this.onTextChanged}
-        value={this.props.text}
+        defaultValue={this.props.text}
+        ref={(el) => { this.feedbackInput = el; }}
       />
       <br />
       <span className="light">Feedback is published on Github</span>
