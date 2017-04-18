@@ -303,6 +303,11 @@ export const uiChangeFeedbackText = text => ({
   text,
 });
 
-export const uiToggleFeedbackAnon = anon => ({
+export const uiToggleFeedbackAnon = () => ({
   type: ActionTypes.UI_FEEDBACK_ANON_TOGGLE,
+});
+
+export const uiChangeFeedbackToIndex = toIndex => ({
+  type: ActionTypes.UI_FEEDBACK_TO_INDEX_CHANGE,
+  toIndex,
 });

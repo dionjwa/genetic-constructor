@@ -21,11 +21,17 @@ import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects
 import {
   uiSetGrunt,
   uiChangeFeedbackText,
+  uiChangeFeedbackToIndex,
   uiToggleFeedbackAnon,
 } from '../../actions/ui';
 import Selector from '../orders/selector';
 import { userGetUser } from '../../selectors/user';
 import '../../styles/InspectorGroupFeedback.css';
+
+const TO_OPTIONS = [
+  'Autodesk GSL: Editor Team',
+  'Genetic Constructor Team',
+];
 
 /**
  * tracking via heap
@@ -44,17 +50,19 @@ class InspectorGroupFeedback extends Component {
   static propTypes = {
     uiSetGrunt: PropTypes.func.isRequired,
     uiChangeFeedbackText: PropTypes.func.isRequired,
+    uiChangeFeedbackToIndex: PropTypes.func.isRequired,
     uiToggleFeedbackAnon: PropTypes.func.isRequired,
     userGetUser: PropTypes.func.isRequired,
     projectGetCurrentId: PropTypes.func.isRequired,
     projectGetVersion: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
+    anon: PropTypes.bool.isRequired,
+    toIndex: PropTypes.number.isRequired,
   };
 
   constructor() {
     super();
     this.state = {
-      feedbackTo: this.toOptions[0],
       star0: false,
       star1: false,
       star2: false,
@@ -92,7 +100,7 @@ class InspectorGroupFeedback extends Component {
    * user wants to publish feedback
    */
   onPublishFeedback = () => {
-    const team = this.state.feedbackTo;
+    const team = TO_OPTIONS[this.props.toIndex];
     const anonymous = this.props.anon;
     const message = this.props.text;
 
@@ -154,16 +162,9 @@ class InspectorGroupFeedback extends Component {
    * when the destination for feedback is changed
    * @param val
    */
-  feedbackToChanged = (val) => {
-    this.setState({
-      feedbackTo: val,
-    });
+  toIndexChanged = (val) => {
+    this.props.uiChangeFeedbackToIndex(TO_OPTIONS.indexOf(val));
   };
-
-  toOptions = [
-    'Autodesk GSL: Editor Team',
-    'Genetic Constructor Team',
-  ];
 
   render() {
     return (<div className="InspectorGroupFeedback">
@@ -213,10 +214,10 @@ class InspectorGroupFeedback extends Component {
       <br />
       <span className="light">To</span>
       <Selector
-        options={this.toOptions}
-        onChange={this.feedbackToChanged}
+        options={TO_OPTIONS}
+        onChange={this.toIndexChanged}
         disabled={false}
-        value={this.state.feedbackTo}
+        value={TO_OPTIONS[this.props.toIndex]}
       />
       <br />
       <textarea
@@ -260,6 +261,7 @@ export default connect(
   state => state.ui.feedback,
   {
     uiChangeFeedbackText,
+    uiChangeFeedbackToIndex,
     uiSetGrunt,
     uiToggleFeedbackAnon,
     userGetUser,

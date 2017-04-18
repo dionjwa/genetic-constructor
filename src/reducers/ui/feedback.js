@@ -18,6 +18,7 @@ import * as ActionTypes from '../../constants/ActionTypes';
 export const initialState = {
   anon: false,
   text: '',
+  toIndex: 0,
 };
 
 export default function feedback(state = initialState, action) {
@@ -30,6 +31,11 @@ export default function feedback(state = initialState, action) {
     case ActionTypes.UI_FEEDBACK_ANON_TOGGLE:
       return Object.assign({}, state, {
         anon: !state.anon,
+      });
+
+    case ActionTypes.UI_FEEDBACK_TO_INDEX_CHANGE:
+      return Object.assign({}, state, {
+        toIndex: action.toIndex,
       });
 
     default:
