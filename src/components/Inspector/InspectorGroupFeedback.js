@@ -20,6 +20,7 @@ import { reportError } from '../../middleware/reporting';
 import { projectGetCurrentId, projectGetVersion } from '../../selectors/projects';
 import {
   uiSetGrunt,
+  uiClickFeedbackStar,
   uiChangeFeedbackText,
   uiChangeFeedbackToIndex,
   uiToggleFeedbackAnon,
@@ -49,6 +50,7 @@ const heapTrack = function (message, object) {
 class InspectorGroupFeedback extends Component {
   static propTypes = {
     uiSetGrunt: PropTypes.func.isRequired,
+    uiClickFeedbackStar: PropTypes.func.isRequired,
     uiChangeFeedbackText: PropTypes.func.isRequired,
     uiChangeFeedbackToIndex: PropTypes.func.isRequired,
     uiToggleFeedbackAnon: PropTypes.func.isRequired,
@@ -58,17 +60,13 @@ class InspectorGroupFeedback extends Component {
     text: PropTypes.string.isRequired,
     anon: PropTypes.bool.isRequired,
     toIndex: PropTypes.number.isRequired,
+    stars: PropTypes.number.isRequired,
   };
 
   constructor() {
     super();
     this.state = {
-      star0: false,
-      star1: false,
-      star2: false,
-      star3: false,
-      star4: false,
-      starClicked: false,
+      mouseStars: 0,
     };
   }
 
@@ -133,29 +131,18 @@ class InspectorGroupFeedback extends Component {
    * user clicked a star rating
    * @param index 0..4
    */
-  starRating(index) {
-    const value = Number.parseFloat(index);
-    this.setState({ starClicked: true });
+  clickStar(starIndex) {
+    this.props.uiClickFeedbackStar(starIndex);
     this.props.uiSetGrunt('Thanks for your feedback.');
-    heapTrack('Star Rating', { value });
+    heapTrack('Star Rating', { value: starIndex + 1 });
   }
 
   /**
    * mouse over a star
    * @param index
    */
-  overStar = (index) => {
-    // do not reset stars on mouse leave if the user already clicked a star
-    if (index === -1 && this.state.starClicked) {
-      return;
-    }
-    this.setState({
-      star0: index >= 0,
-      star1: index >= 1,
-      star2: index >= 2,
-      star3: index >= 3,
-      star4: index >= 4,
-    });
+  overStar = (starIndex) => {
+    this.setState({ mouseStars: starIndex + 1 });
   };
 
   /**
@@ -167,36 +154,38 @@ class InspectorGroupFeedback extends Component {
   };
 
   render() {
+    const stars = Math.max(this.state.mouseStars, this.props.stars);
+
     return (<div className="InspectorGroupFeedback">
       <span className="bold">How would you rate this software right now?</span>
       <div className="star-box">
         <div
-          className={`star-five star-five-small star-0 ${this.state.star0 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(0)}
+          className={`star-five star-five-small star-0 ${stars > 0 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(0)}
           onMouseEnter={() => this.overStar(0)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-1 ${this.state.star1 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(1)}
+          className={`star-five star-five-small star-1 ${stars > 1 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(1)}
           onMouseEnter={() => this.overStar(1)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-2 ${this.state.star2 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(2)}
+          className={`star-five star-five-small star-2 ${stars > 2 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(2)}
           onMouseEnter={() => this.overStar(2)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-3 ${this.state.star3 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(3)}
+          className={`star-five star-five-small star-3 ${stars > 3 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(3)}
           onMouseEnter={() => this.overStar(3)}
           onMouseLeave={() => this.overStar(-1)}
         />
         <div
-          className={`star-five star-five-small star-4 ${this.state.star4 ? '' : 'star-gray'}`}
-          onClick={() => this.starRating(4)}
+          className={`star-five star-five-small star-4 ${stars > 4 ? '' : 'star-gray'}`}
+          onClick={() => this.clickStar(4)}
           onMouseEnter={() => this.overStar(4)}
           onMouseLeave={() => this.overStar(-1)}
         />
@@ -260,6 +249,7 @@ class InspectorGroupFeedback extends Component {
 export default connect(
   state => state.ui.feedback,
   {
+    uiClickFeedbackStar,
     uiChangeFeedbackText,
     uiChangeFeedbackToIndex,
     uiSetGrunt,

@@ -311,3 +311,8 @@ export const uiChangeFeedbackToIndex = toIndex => ({
   type: ActionTypes.UI_FEEDBACK_TO_INDEX_CHANGE,
   toIndex,
 });
+
+export const uiClickFeedbackStar = starIndex => ({
+  type: ActionTypes.UI_FEEDBACK_STARS_CHANGE,
+  stars: starIndex + 1,
+});

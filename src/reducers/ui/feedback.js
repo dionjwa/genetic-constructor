@@ -19,6 +19,7 @@ export const initialState = {
   anon: false,
   text: '',
   toIndex: 0,
+  stars: 0,
 };
 
 export default function feedback(state = initialState, action) {
@@ -36,6 +37,11 @@ export default function feedback(state = initialState, action) {
     case ActionTypes.UI_FEEDBACK_TO_INDEX_CHANGE:
       return Object.assign({}, state, {
         toIndex: action.toIndex,
+      });
+
+    case ActionTypes.UI_FEEDBACK_STARS_CHANGE:
+      return Object.assign({}, state, {
+        stars: action.stars,
       });
 
     default:
