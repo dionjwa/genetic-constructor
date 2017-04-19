@@ -97,10 +97,15 @@ export class InventoryItem extends Component {
       onDrop: (target, position) => {
         if (this.props.onDrop) {
           this.setState({ loading: true });
-          return this.props.onDrop(this.props.item, target, position)
+          const onDropPromise = this.props.onDrop(this.props.item, target, position);
+          onDropPromise
             .then(() => {
               this.setState({ loading: false });
+            })
+            .catch(() => {
+              this.setState({ loading: false });
             });
+          return onDropPromise;
         }
       },
       onDropFailure: (error, target) => {
