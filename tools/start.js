@@ -189,7 +189,20 @@ async function start() {
         console.log(colors.bgRed('Error creating webpack bundle!'));
         throw err;
       });
-      clientCompiler.plugin('done', () => handleBundleComplete());
+
+      clientCompiler.plugin('done', (multistats) => {
+        // we have two bundlers, so check for errors in either
+        multistats.stats.forEach((stats) => {
+          if (stats.compilation.errors && stats.compilation.errors.length) {
+            console.log(colors.bgRed('Error creating webpack bundle!'));
+            console.log(stats.compilation.errors);
+            process.exit(1);
+          }
+        });
+
+        //done should only be called once both bundles are complete (unless there is an error)
+        handleBundleComplete();
+      });
 
       /*
        console.info('beginning webpack build');
