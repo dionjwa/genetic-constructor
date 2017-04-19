@@ -25,7 +25,9 @@ module.exports = {
 
     browser
       // wait for a block to appear
+      .assert.countelements('.InventoryItem.loading', 1, 'Dragged inventoryitem is in loading state')
       .waitForElementPresent('[data-nodetype="block"]', 30000, 'expected blocks to appear')
+      .assert.countelements('.InventoryItem.loading', 0, 'Dragged inventoryitem finished loading')
       .assert.countelements('[data-nodetype="block"]', 25)
       .end();
   }
