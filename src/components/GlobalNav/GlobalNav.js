@@ -47,7 +47,7 @@ import { projectGetVersion } from '../../selectors/projects';
 import * as instanceMap from '../../store/instanceMap';
 import { commit, redo, transact, undo } from '../../store/undo/actions';
 import { stringToShortcut } from '../../utils/ui/keyboard-translator';
-import { sortBlocksByIndexAndDepth, sortBlocksByIndexAndDepthExclude } from '../../utils/ui/uiapi';
+import { sortBlocksByIndexAndDepth } from '../../utils/ui/uiapi';
 
 import '../../styles/GlobalNav.css';
 
@@ -282,13 +282,16 @@ class GlobalNav extends Component {
    */
   findInsertBlock() {
     // sort blocks according to 'natural order'
-    const sorted = sortBlocksByIndexAndDepth(this.props.focus.blockIds);
+    const sorted = sortBlocksByIndexAndDepth(this.focusedConstruct(), this.props.blocks, this.props.focus.blockIds, false);
     // the right most, top most block is the insertion point
-    const highest = sorted.pop();
+    const highestId = sorted.pop();
+    // get index + 1 ( to the right ) of the deepest / rightmost selected block
+    const parent = this.blockGetParent(highestId);
+    const index = parent.components.indexOf(highestId) + 1;
     // return parent of highest block and index + 1 so that the block is inserted after the highest block
     return {
-      parent: this.blockGetParent(this.props.blocks[highest.blockId].id).id,
-      index: highest.index + 1,
+      parent: parent.id,
+      index,
     };
   }
 
@@ -308,10 +311,10 @@ class GlobalNav extends Component {
       // sort selected blocks so they are pasted in the same order as they exist now.
       // NOTE: we don't copy the children of any selected parents since they will
       // be cloned along with their parent
-      const sorted = sortBlocksByIndexAndDepthExclude(blockIds);
+      const sorted = sortBlocksByIndexAndDepth(this.focusedConstruct(), this.props.blocks, blockIds, true);
       // sorted is an array of array, flatten while retaining order
       const currentProjectVersion = this.props.projectGetVersion(this.props.currentProjectId);
-      const clones = sorted.map(info => this.props.blockClone(info.blockId, {
+      const clones = sorted.map(blockId => this.props.blockClone(blockId, {
         projectId: this.props.currentProjectId,
         version: currentProjectVersion,
       }));
