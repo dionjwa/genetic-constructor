@@ -16,7 +16,7 @@
 import D from 'DOMArray';
 import { dispatch } from '../../store/index';
 import { transact } from '../../store/undo/actions';
-import { sortBlocksByIndexAndDepthExclude } from '../../utils/ui/uiapi';
+import { sortBlocksByIndexAndDepth } from '../../utils/ui/uiapi';
 import DnD from '../dnd/dnd';
 import Box2D from '../geometry/box2d';
 import Vector2D from '../geometry/vector2d';
@@ -544,7 +544,7 @@ export default class ConstructViewerUserInterface extends UserInterface {
         const copying = evt.altKey;
         // filter our selected elements so they are in natural order
         // and with children of selected parents excluded.
-        const blockIds = sortBlocksByIndexAndDepthExclude(draggables).map(info => info.blockId);
+        const blockIds = sortBlocksByIndexAndDepth(this.construct, this.constructViewer.props.blocks, draggables, true);
         // if a multi-select and any of the blocks are backbones disallow
         if (blockIds.length > 1 && blockIds.some((blockId) => {
           const block = this.constructViewer.props.blocks[blockId];
