@@ -2,7 +2,7 @@ api:
   extends:
     file: docker-compose.yml
     service: api
-  image: quay.io/autodesk_bionano/gctorstorage_api${BNR_ENV_TAG}
+  image: quay.io/bionano/gctorstorage_api${BNR_ENV_TAG}
   environment:
     PORT: 4747
     PGHOST: gctor-db${BNR_ENV_URL_SUFFIX}.bionano.bio

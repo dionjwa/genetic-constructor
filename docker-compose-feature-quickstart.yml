@@ -2,7 +2,7 @@ webapp:
   extends:
     file: docker-compose-aws.yml
     service: webapp
-  image: quay.io/autodesk_bionano/gctorfeature_webapp${BNR_ENV_TAG}
+  image: quay.io/bionano/gctorfeature_webapp${BNR_ENV_TAG}
   ports:
     - "3333:3333"
   environment:
