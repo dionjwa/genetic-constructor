@@ -16,7 +16,7 @@
 
 constructor.extensions.register('blast', 'menu:block',
   (singleBlockSelected, block) => [{
-    text: 'BLAST',
+    text: 'BLAST Sequence',
     disabled: !singleBlockSelected || !block.hasSequence() || block.hasContents() || block.sequence.length <= 10,
     action: () =>
       block.getSequence()
