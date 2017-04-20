@@ -98,14 +98,18 @@ class InspectorGroupExtensions extends Component {
             on={this.checkExtensionActive(extension.name)}
             switched={() => this.extensionToggled(extension.name)}
           />
-          )];
+        )];
+
+        const authorName = `${values.Author.name || 'Unknown'}${
+          values.Author.email ? `\n${values.Author.email}` : ''
+          }`;
 
         const items = [
           { key: 'Type', value: values.Type },
           { key: 'Description', value: values.Description },
           {
             key: 'Author',
-            value: values.Author.name ? `${values.Author.name}\n${values.Author.email}` : values.Author,
+            value: authorName,
           },
         ];
         const content = (<InspectorDetailSection items={items} />);
