@@ -26,7 +26,6 @@ import { importFile as importGenbankFile } from '../../middleware/genbank';
 import { projectGet, projectListAllBlocks } from '../../selectors/projects';
 import ModalWindow from '../modal/modalwindow';
 
-
 /**
  * Genbank import dialog.
  */
